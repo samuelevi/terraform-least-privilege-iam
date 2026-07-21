@@ -1,0 +1,22 @@
+#  Lessons learned deploying this
+
+Getting this from code to a working, verified pipeline surfaced a couple of
+real infrastructure problems worth documenting:
+
+- Git history and large binaries — my first commit accidentally included
+  the `.terraform/` provider cache, which bundled a ~140 MB AWS provider
+  binary. This caused repeated push timeouts to GitHub. Fixed by adding a
+  proper `.gitignore` (`.terraform/`, `*.tfstate`, etc.) and rebuilding the
+  commit history so the binary was never tracked, rather than trying to
+  scrub it after the fact.
+  
+- CI credentials — the GitHub Actions runner has no AWS credentials by
+  default, so `terraform plan` failed in CI with "No valid credential
+  sources found" even though it worked fine locally (where the AWS CLI was
+  already configured). Fixed by storing the access key as encrypted GitHub
+  Secrets and mapping them to `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`
+  environment variables in the workflow, rather than hardcoding anything.
+
+Both are common real-world gaps between "works on my machine" and "works in
+CI" — good reminders that a policy-as-code pipeline needs its own working
+credentials and clean git hygiene, not just correct Terraform.
