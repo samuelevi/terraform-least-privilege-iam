@@ -1,4 +1,4 @@
-#  Lessons learned deploying this
+  Lessons learned deploying this
 
 Getting this from code to a working, verified pipeline surfaced a couple of
 real infrastructure problems worth documenting:
@@ -18,5 +18,5 @@ real infrastructure problems worth documenting:
   environment variables in the workflow, rather than hardcoding anything.
 
 Both are common real-world gaps between "works on my machine" and "works in
-CI" — good reminders that a policy-as-code pipeline needs its own working
+CI" good reminders that a policy-as-code pipeline needs its own working
 credentials and clean git hygiene, not just correct Terraform.
